@@ -31,6 +31,24 @@ class Index extends React.Component {
       tasks: prevState.tasks.filter((task) => deleteSingleTask !== task),
     }));
   }
+  componentDidMount() {
+    try {
+      var taskData = localStorage.getItem("tasks");
+      var tasks = JSON.parse(taskData);
+
+      if (tasks) {
+        this.setState(() => ({
+          tasks: tasks,
+        }));
+      }
+    } catch (e) {}
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.tasks.length !== this.state.tasks.length) {
+      var json = JSON.stringify(this.state.tasks);
+      localStorage.setItem("tasks", json);
+    }
+  }
   render() {
     return (
       <div>
