@@ -5,8 +5,10 @@ class Index extends React.Component {
   constructor(props) {
     super(props);
     this.handleAddTask = this.handleAddTask.bind(this);
+    this.handlePick = this.handlePick.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
     this.state = {
-      tasks: ["cookin", "eating", "coding", "learning"],
+      tasks: [],
     };
   }
   handleAddTask(task) {
@@ -19,10 +21,25 @@ class Index extends React.Component {
       tasks: prevState.tasks.concat(task),
     }));
   }
+  handlePick() {
+    var task = Math.floor(Math.random() * this.state.tasks.length);
+    var pick = this.state.tasks[task];
+    alert(pick);
+  }
+  handleDelete(deleteSingleTask) {
+    this.setState((prevState) => ({
+      tasks: prevState.tasks.filter((task) => deleteSingleTask !== task),
+    }));
+  }
   render() {
     return (
       <div>
-        <Visibility tasks={this.state.tasks} />
+        <Visibility
+          tasks={this.state.tasks}
+          randomPick={this.handlePick}
+          hasTask={this.state.tasks.length > 0}
+          taskDelete={this.handleDelete}
+        />
         <AddTask addtask={this.handleAddTask} />
       </div>
     );
@@ -32,8 +49,18 @@ const Visibility = (props) => {
   return (
     <div>
       <h1>Hello React</h1>
+      <button onClick={props.randomPick} disabled={!props.hasTask}>
+        random pick task
+      </button>
       {props.tasks.map((task, index) => {
-        return <Tasks key={task} list={task} index={index + 1} />;
+        return (
+          <Tasks
+            key={task}
+            list={task}
+            index={index + 1}
+            deleteTask={props.taskDelete}
+          />
+        );
       })}
     </div>
   );
@@ -43,6 +70,7 @@ const Tasks = (props) => {
   return (
     <p>
       {props.index}. {props.list}
+      <button onClick={() => props.deleteTask(props.list)}>delete</button>
     </p>
   );
 };
