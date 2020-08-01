@@ -108,6 +108,7 @@ class AddTask extends React.Component {
     this.setState(() => ({
       error: errorData,
     }));
+    e.target.task.value = "";
   }
   render() {
     return (
